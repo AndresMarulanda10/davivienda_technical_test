@@ -9,9 +9,7 @@ import {
 
 @QueryHandler(GetProductByIdQuery)
 export class GetProductByIdHandler implements IQueryHandler<GetProductByIdQuery> {
-  constructor(
-    @Inject(PRODUCT_REPOSITORY) private readonly repo: IProductRepository,
-  ) {}
+  constructor(@Inject(PRODUCT_REPOSITORY) private readonly repo: IProductRepository) {}
 
   async execute(query: GetProductByIdQuery): Promise<ProductRecord> {
     const product = await this.repo.findByIdActive(query.id);

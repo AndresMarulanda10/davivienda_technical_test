@@ -8,9 +8,7 @@ import {
 
 @CommandHandler(DeleteProductCommand)
 export class DeleteProductHandler implements ICommandHandler<DeleteProductCommand> {
-  constructor(
-    @Inject(PRODUCT_REPOSITORY) private readonly repo: IProductRepository,
-  ) {}
+  constructor(@Inject(PRODUCT_REPOSITORY) private readonly repo: IProductRepository) {}
 
   async execute(command: DeleteProductCommand): Promise<void> {
     const existing = await this.repo.findById(command.id);

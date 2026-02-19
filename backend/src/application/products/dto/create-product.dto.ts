@@ -3,7 +3,6 @@ import {
   IsNumber,
   IsUUID,
   IsUrl,
-  IsOptional,
   Min,
   MinLength,
   MaxLength,

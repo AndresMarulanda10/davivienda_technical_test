@@ -9,9 +9,7 @@ import {
 
 @QueryHandler(GetProductsQuery)
 export class GetProductsHandler implements IQueryHandler<GetProductsQuery> {
-  constructor(
-    @Inject(PRODUCT_REPOSITORY) private readonly repo: IProductRepository,
-  ) {}
+  constructor(@Inject(PRODUCT_REPOSITORY) private readonly repo: IProductRepository) {}
 
   async execute(query: GetProductsQuery): Promise<PaginatedProducts> {
     return this.repo.findAll(query.filters);

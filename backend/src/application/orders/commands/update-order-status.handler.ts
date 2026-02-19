@@ -7,9 +7,7 @@ import {
 } from '../../../domain/repositories/order.repository.interface';
 
 @CommandHandler(UpdateOrderStatusCommand)
-export class UpdateOrderStatusHandler
-  implements ICommandHandler<UpdateOrderStatusCommand>
-{
+export class UpdateOrderStatusHandler implements ICommandHandler<UpdateOrderStatusCommand> {
   constructor(
     @Inject(ORDER_REPOSITORY)
     private readonly orderRepo: IOrderRepository,

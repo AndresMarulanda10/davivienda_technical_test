@@ -29,10 +29,7 @@ export class CartController {
   }
 
   @Post('items')
-  async addItem(
-    @CurrentUser() user: JwtPayload,
-    @Body() dto: AddCartItemDto,
-  ) {
+  async addItem(@CurrentUser() user: JwtPayload, @Body() dto: AddCartItemDto) {
     return this.cartService.addItem(user.sub, dto.productId, dto.quantity);
   }
 

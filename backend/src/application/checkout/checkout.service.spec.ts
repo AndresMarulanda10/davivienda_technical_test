@@ -1,8 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  BadRequestException,
-  ConflictException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CheckoutService } from './checkout.service';
 import { CartService, Cart } from '../cart/cart.service';
@@ -16,6 +13,7 @@ describe('CheckoutService', () => {
   let cartService: jest.Mocked<CartService>;
   let prisma: { $transaction: jest.Mock };
   let paymentStrategy: { process: jest.Mock };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let discountStrategy: { apply: jest.Mock };
   let eventEmitter: { emit: jest.Mock };
 
@@ -136,9 +134,7 @@ describe('CheckoutService', () => {
     it('should throw BadRequestException when cart is empty', async () => {
       cartService.getCart.mockResolvedValue(emptyCart);
 
-      await expect(service.processCheckout(userId)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(service.processCheckout(userId)).rejects.toThrow(BadRequestException);
     });
 
     it('should complete checkout successfully', async () => {
@@ -146,14 +142,12 @@ describe('CheckoutService', () => {
       cartService.clearCart.mockResolvedValue(undefined);
 
       // Mock $transaction to invoke the callback with mockTx
-      prisma.$transaction.mockImplementation(async (cb: Function) => {
+      prisma.$transaction.mockImplementation(async (cb: (tx: typeof mockTx) => unknown) => {
         return cb(mockTx);
       });
 
       // Stock check passes
-      mockTx.$queryRawUnsafe.mockResolvedValue([
-        { id: 'prod-1', stock: 10, name: 'Test Product' },
-      ]);
+      mockTx.$queryRawUnsafe.mockResolvedValue([{ id: 'prod-1', stock: 10, name: 'Test Product' }]);
       mockTx.product.update.mockResolvedValue({});
       mockTx.order.create.mockResolvedValue(mockCreatedOrder);
 
@@ -181,18 +175,14 @@ describe('CheckoutService', () => {
     it('should throw ConflictException when stock is insufficient', async () => {
       cartService.getCart.mockResolvedValue(cartWithItems);
 
-      prisma.$transaction.mockImplementation(async (cb: Function) => {
+      prisma.$transaction.mockImplementation(async (cb: (tx: typeof mockTx) => unknown) => {
         return cb(mockTx);
       });
 
       // Stock check fails -- only 1 unit available, 2 requested
-      mockTx.$queryRawUnsafe.mockResolvedValue([
-        { id: 'prod-1', stock: 1, name: 'Test Product' },
-      ]);
+      mockTx.$queryRawUnsafe.mockResolvedValue([{ id: 'prod-1', stock: 1, name: 'Test Product' }]);
 
-      await expect(service.processCheckout(userId)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.processCheckout(userId)).rejects.toThrow(ConflictException);
 
       expect(cartService.clearCart).not.toHaveBeenCalled();
     });
@@ -200,14 +190,12 @@ describe('CheckoutService', () => {
     it('should throw ConflictException when payment is rejected', async () => {
       cartService.getCart.mockResolvedValue(cartWithItems);
 
-      prisma.$transaction.mockImplementation(async (cb: Function) => {
+      prisma.$transaction.mockImplementation(async (cb: (tx: typeof mockTx) => unknown) => {
         return cb(mockTx);
       });
 
       // Stock check passes
-      mockTx.$queryRawUnsafe.mockResolvedValue([
-        { id: 'prod-1', stock: 10, name: 'Test Product' },
-      ]);
+      mockTx.$queryRawUnsafe.mockResolvedValue([{ id: 'prod-1', stock: 10, name: 'Test Product' }]);
       mockTx.product.update.mockResolvedValue({});
       mockTx.order.create.mockResolvedValue({
         ...mockCreatedOrder,
@@ -227,9 +215,7 @@ describe('CheckoutService', () => {
         paymentStatus: 'REJECTED',
       });
 
-      await expect(service.processCheckout(userId)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.processCheckout(userId)).rejects.toThrow(ConflictException);
 
       expect(cartService.clearCart).not.toHaveBeenCalled();
     });

@@ -11,11 +11,7 @@ import { PRODUCT_REPOSITORY } from '../../domain/repositories/product.repository
 import { AuthModule } from '../auth/auth.module';
 import { DatabaseModule } from '../../infrastructure/database/database.module';
 
-const CommandHandlers = [
-  CreateProductHandler,
-  UpdateProductHandler,
-  DeleteProductHandler,
-];
+const CommandHandlers = [CreateProductHandler, UpdateProductHandler, DeleteProductHandler];
 
 const QueryHandlers = [GetProductsHandler, GetProductByIdHandler];
 

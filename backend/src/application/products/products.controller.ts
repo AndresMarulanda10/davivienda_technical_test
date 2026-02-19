@@ -56,20 +56,14 @@ export class ProductsController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
-  async createProduct(
-    @Body() dto: CreateProductDto,
-    @CurrentUser() user: JwtPayload,
-  ) {
+  async createProduct(@Body() dto: CreateProductDto, @CurrentUser() user: JwtPayload) {
     return this.commandBus.execute(new CreateProductCommand(dto, user.sub));
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
-  async updateProduct(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: UpdateProductDto,
-  ) {
+  async updateProduct(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateProductDto) {
     return this.commandBus.execute(new UpdateProductCommand(id, dto));
   }
 

@@ -117,9 +117,9 @@ describe('AuthService', () => {
     it('should throw UnauthorizedException when user is not found', async () => {
       userRepo.findByEmail.mockResolvedValue(null);
 
-      await expect(
-        service.login({ email: 'unknown@test.com', password: 'any' }),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.login({ email: 'unknown@test.com', password: 'any' })).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should throw UnauthorizedException on wrong password', async () => {
@@ -135,9 +135,9 @@ describe('AuthService', () => {
     it('should throw UnauthorizedException when user is not found', async () => {
       userRepo.findById.mockResolvedValue(null);
 
-      await expect(
-        service.refreshTokens('non-existent', 'token'),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.refreshTokens('non-existent', 'token')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should throw UnauthorizedException when refresh token hash is null', async () => {
@@ -146,9 +146,9 @@ describe('AuthService', () => {
         refreshTokenHash: null,
       });
 
-      await expect(
-        service.refreshTokens(mockUser.id, 'token'),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.refreshTokens(mockUser.id, 'token')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should throw UnauthorizedException when token does not match', async () => {
@@ -158,9 +158,9 @@ describe('AuthService', () => {
         refreshTokenHash: storedHash,
       });
 
-      await expect(
-        service.refreshTokens(mockUser.id, 'wrong-token'),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.refreshTokens(mockUser.id, 'wrong-token')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should return new tokens when refresh token is valid', async () => {
@@ -185,10 +185,7 @@ describe('AuthService', () => {
 
       await service.logout(mockUser.id);
 
-      expect(userRepo.updateRefreshTokenHash).toHaveBeenCalledWith(
-        mockUser.id,
-        null,
-      );
+      expect(userRepo.updateRefreshTokenHash).toHaveBeenCalledWith(mockUser.id, null);
     });
   });
 
