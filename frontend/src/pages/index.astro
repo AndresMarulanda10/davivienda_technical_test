@@ -1,14 +1,93 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import ProductGrid from '@components/ProductGrid.astro';
+import ProductSearch from '@islands/ProductSearch';
+import type { PaginatedProducts, Category } from '@/types';
+
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? 'http://localhost:4000';
+
+// Read query params for SSR filtering
+const url = new URL(Astro.request.url);
+const page = url.searchParams.get('page') ?? '1';
+const search = url.searchParams.get('search') ?? '';
+const categoryId = url.searchParams.get('categoryId') ?? '';
+
+// Build backend query string
+const params = new URLSearchParams({ page, limit: '12', isActive: 'true' });
+if (search) params.set('search', search);
+if (categoryId) params.set('categoryId', categoryId);
+
+let products: PaginatedProducts = { data: [], total: 0, page: 1, limit: 12, totalPages: 0 };
+let categories: Category[] = [];
+
+try {
+  const [prodRes, catRes] = await Promise.all([
+    fetch(`${BACKEND_URL}/api/products?${params}`),
+    fetch(`${BACKEND_URL}/api/categories`),
+  ]);
+
+  if (prodRes.ok) {
+    const prodJson = await prodRes.json();
+    products = prodJson.data;
+  }
+  if (catRes.ok) {
+    const catJson = await catRes.json();
+    categories = catJson.data;
+  }
+} catch {
+  // Backend unreachable - render empty state
+}
+
+const currentPage = products.page;
+const totalPages = products.totalPages;
 ---
 
-<BaseLayout title="Davivienda Store">
-  <section class="text-center py-12">
-    <h1 class="text-4xl font-bold tracking-tight mb-4">Welcome to Davivienda Store</h1>
-    <p class="text-lg text-default-500 mb-8">Browse our product catalog</p>
-  </section>
+<BaseLayout title="Products - Davivienda Store">
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Products</h1>
+      <p class="mt-1 text-default-500">Browse our catalog</p>
+    </div>
 
-  <section id="products" class="pb-12">
-    <p class="text-center text-default-400">Product catalog loading...</p>
-  </section>
+    <ProductSearch
+      client:idle
+      categories={categories}
+      initialSearch={search}
+      initialCategory={categoryId}
+    />
+
+    <ProductGrid products={products.data} />
+
+    {totalPages > 1 && (
+      <nav class="flex justify-center gap-2 pt-4">
+        {currentPage > 1 && (
+          <a
+            href={`/?page=${currentPage - 1}${search ? `&search=${search}` : ''}${categoryId ? `&categoryId=${categoryId}` : ''}`}
+            class="rounded-lg border border-divider px-4 py-2 text-sm hover:bg-default-100 transition-colors"
+          >
+            Previous
+          </a>
+        )}
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+          <a
+            href={`/?page=${p}${search ? `&search=${search}` : ''}${categoryId ? `&categoryId=${categoryId}` : ''}`}
+            class:list={[
+              'rounded-lg px-4 py-2 text-sm transition-colors',
+              p === currentPage ? 'bg-primary text-primary-foreground' : 'border border-divider hover:bg-default-100',
+            ]}
+          >
+            {p}
+          </a>
+        ))}
+        {currentPage < totalPages && (
+          <a
+            href={`/?page=${currentPage + 1}${search ? `&search=${search}` : ''}${categoryId ? `&categoryId=${categoryId}` : ''}`}
+            class="rounded-lg border border-divider px-4 py-2 text-sm hover:bg-default-100 transition-colors"
+          >
+            Next
+          </a>
+        )}
+      </nav>
+    )}
+  </div>
 </BaseLayout>

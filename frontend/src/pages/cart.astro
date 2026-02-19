@@ -1,0 +1,11 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CartIsland from '@islands/CartIsland';
+---
+
+<BaseLayout title="Cart - Davivienda Store">
+  <div class="space-y-6">
+    <h1 class="text-3xl font-bold">Shopping Cart</h1>
+    <CartIsland client:load />
+  </div>
+</BaseLayout>

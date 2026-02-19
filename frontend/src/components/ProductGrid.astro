@@ -1,0 +1,25 @@
+---
+import type { Product } from '@/types';
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  products: Product[];
+}
+
+const { products } = Astro.props;
+---
+
+{products.length === 0 ? (
+  <div class="flex flex-col items-center justify-center gap-4 py-16">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" class="text-default-300">
+      <path fill="currentColor" d="M11 2a9 9 0 1 0 0 18a9 9 0 0 0 0-18m-1 4h2v5h-2zm0 6h2v2h-2z"/>
+    </svg>
+    <p class="text-lg text-default-500">No products found</p>
+  </div>
+) : (
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    {products.map((product) => (
+      <ProductCard product={product} />
+    ))}
+  </div>
+)}

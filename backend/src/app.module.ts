@@ -10,6 +10,7 @@ import { ProductsModule } from './application/products/products.module';
 import { CartModule } from './application/cart/cart.module';
 import { CheckoutModule } from './application/checkout/checkout.module';
 import { OrdersModule } from './application/orders/orders.module';
+import { CategoriesModule } from './application/categories/categories.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { OrdersModule } from './application/orders/orders.module';
     CartModule,
     OrdersModule,
     CheckoutModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
 })

@@ -1,0 +1,11 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CheckoutForm from '@islands/CheckoutForm';
+---
+
+<BaseLayout title="Checkout - Davivienda Store">
+  <div class="space-y-6">
+    <h1 class="text-3xl font-bold">Checkout</h1>
+    <CheckoutForm client:load />
+  </div>
+</BaseLayout>

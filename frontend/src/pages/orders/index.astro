@@ -1,0 +1,78 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import type { Order } from '@/types';
+
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? 'http://localhost:4000';
+
+// Get access token from cookie for SSR fetch
+const token = Astro.cookies.get('access_token')?.value;
+let orders: Order[] = [];
+
+try {
+  const res = await fetch(`${BACKEND_URL}/api/orders`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (res.ok) {
+    const json = await res.json();
+    orders = json.data;
+  }
+} catch {
+  // Backend unreachable
+}
+
+function statusColor(status: string) {
+  switch (status) {
+    case 'COMPLETED': return 'text-success';
+    case 'PENDING': return 'text-warning';
+    case 'PROCESSING': return 'text-primary';
+    case 'CANCELLED': return 'text-danger';
+    default: return 'text-default-500';
+  }
+}
+---
+
+<BaseLayout title="My Orders - Davivienda Store">
+  <div class="space-y-6">
+    <h1 class="text-3xl font-bold">My Orders</h1>
+
+    {orders.length === 0 ? (
+      <div class="flex flex-col items-center gap-4 py-16">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" class="text-default-300">
+          <path fill="currentColor" d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2M10 4h4v2h-4zm10 16H4V8h16z"/>
+        </svg>
+        <p class="text-lg text-default-500">No orders yet</p>
+        <a href="/" class="text-primary hover:underline">Browse products</a>
+      </div>
+    ) : (
+      <div class="space-y-4">
+        {orders.map((order) => (
+          <a href={`/orders/${order.id}`} class="block">
+            <div class="rounded-xl border border-divider bg-content1 p-4 hover:bg-default-50 transition-colors">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div class="space-y-1">
+                  <p class="font-mono text-xs text-default-400">#{order.id.slice(0, 8)}</p>
+                  <p class="text-sm text-default-500">
+                    {new Date(order.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric', month: 'long', day: 'numeric',
+                    })}
+                  </p>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class={`text-sm font-medium ${statusColor(order.status)}`}>
+                    {order.status}
+                  </span>
+                  <span class="text-lg font-bold">
+                    ${parseFloat(order.total).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+              <div class="mt-3 text-sm text-default-500">
+                {order.items.length} item{order.items.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>
