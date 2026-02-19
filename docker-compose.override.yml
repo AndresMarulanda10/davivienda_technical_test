@@ -1,0 +1,36 @@
+# docker-compose.override.yml — Local development overrides
+# Loaded automatically by Docker Compose alongside docker-compose.yml.
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      target: development
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./backend/src:/app/src:delegated
+      - ./backend/prisma:/app/prisma:delegated
+    ports:
+      - "4000:4000"
+      - "9229:9229"
+    command: sh -c "npx prisma migrate dev --skip-seed && npm run start:debug"
+
+  frontend:
+    build:
+      target: development
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./frontend/src:/app/src:delegated
+      - ./frontend/public:/app/public:delegated
+    ports:
+      - "3000:3000"
+    command: npm run dev -- --host 0.0.0.0
