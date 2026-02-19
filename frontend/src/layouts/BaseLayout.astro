@@ -1,0 +1,50 @@
+---
+import '@/styles/global.css';
+import NavbarIsland from '@islands/NavbarIsland';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Davivienda Store' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Davivienda E-commerce Store" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-background text-foreground antialiased">
+    <div id="app" class="flex min-h-screen flex-col">
+      <header>
+        <NavbarIsland client:load />
+      </header>
+
+      <main class="flex-1 mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <slot />
+      </main>
+
+      <footer class="border-t border-divider py-6">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <p class="text-sm text-default-400">
+              &copy; {new Date().getFullYear()} Davivienda Store. All rights reserved.
+            </p>
+            <div class="flex gap-4">
+              <a href="/" class="text-sm text-default-400 hover:text-foreground transition-colors">
+                Home
+              </a>
+              <a href="/orders" class="text-sm text-default-400 hover:text-foreground transition-colors">
+                Orders
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
