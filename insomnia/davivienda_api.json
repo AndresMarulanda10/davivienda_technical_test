@@ -259,6 +259,78 @@
         { "name": "Authorization", "value": "Bearer {{ access_token }}" }
       ],
       "body": {}
+    },
+    {
+      "_id": "fld_cart",
+      "_type": "request_group",
+      "parentId": "wrk_davivienda",
+      "name": "Cart"
+    },
+    {
+      "_id": "req_get_cart",
+      "_type": "request",
+      "parentId": "fld_cart",
+      "name": "GET /cart",
+      "method": "GET",
+      "url": "{{ base_url }}/cart",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_add_cart_item",
+      "_type": "request",
+      "parentId": "fld_cart",
+      "name": "POST /cart/items (add item)",
+      "method": "POST",
+      "url": "{{ base_url }}/cart/items",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"productId\": \"REPLACE_WITH_PRODUCT_ID\",\n  \"quantity\": 2\n}"
+      }
+    },
+    {
+      "_id": "req_update_cart_item",
+      "_type": "request",
+      "parentId": "fld_cart",
+      "name": "PATCH /cart/items/:productId (update qty)",
+      "method": "PATCH",
+      "url": "{{ base_url }}/cart/items/REPLACE_WITH_PRODUCT_ID",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"quantity\": 5\n}"
+      }
+    },
+    {
+      "_id": "req_remove_cart_item",
+      "_type": "request",
+      "parentId": "fld_cart",
+      "name": "DELETE /cart/items/:productId (remove item)",
+      "method": "DELETE",
+      "url": "{{ base_url }}/cart/items/REPLACE_WITH_PRODUCT_ID",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_cart_no_auth",
+      "_type": "request",
+      "parentId": "fld_cart",
+      "name": "GET /cart — 401 (no token)",
+      "method": "GET",
+      "url": "{{ base_url }}/cart",
+      "headers": [],
+      "body": {}
     }
   ]
 }

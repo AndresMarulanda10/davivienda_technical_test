@@ -4,8 +4,10 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { DatabaseModule } from './infrastructure/database/database.module';
+import { CacheModule } from './infrastructure/cache/cache.module';
 import { AuthModule } from './application/auth/auth.module';
 import { ProductsModule } from './application/products/products.module';
+import { CartModule } from './application/cart/cart.module';
 
 @Module({
   imports: [
@@ -31,8 +33,10 @@ import { ProductsModule } from './application/products/products.module';
     }),
     EventEmitterModule.forRoot(),
     DatabaseModule,
+    CacheModule,
     AuthModule,
     ProductsModule,
+    CartModule,
   ],
   controllers: [AppController],
 })
