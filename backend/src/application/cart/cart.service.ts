@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  Inject,
-  NotFoundException,
-  ConflictException,
-} from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, ConflictException } from '@nestjs/common';
 import { RedisService } from '../../infrastructure/cache/redis.service';
 import {
   IProductRepository,
@@ -55,11 +50,7 @@ export class CartService {
     };
   }
 
-  async addItem(
-    userId: string,
-    productId: string,
-    quantity: number,
-  ): Promise<Cart> {
+  async addItem(userId: string, productId: string, quantity: number): Promise<Cart> {
     const product = await this.productRepo.findByIdActive(productId);
     if (!product) {
       throw new NotFoundException(`Product ${productId} not found`);
@@ -90,11 +81,7 @@ export class CartService {
     return this.getCart(userId);
   }
 
-  async updateItem(
-    userId: string,
-    productId: string,
-    quantity: number,
-  ): Promise<Cart> {
+  async updateItem(userId: string, productId: string, quantity: number): Promise<Cart> {
     const key = CART_KEY(userId);
     const existing = await this.redis.hget(key, productId);
     if (!existing) {

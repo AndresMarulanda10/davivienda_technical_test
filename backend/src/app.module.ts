@@ -10,6 +10,7 @@ import { ProductsModule } from './application/products/products.module';
 import { CartModule } from './application/cart/cart.module';
 import { CheckoutModule } from './application/checkout/checkout.module';
 import { OrdersModule } from './application/orders/orders.module';
+import { CategoriesModule } from './application/categories/categories.module';
 
 @Module({
   imports: [
@@ -17,9 +18,7 @@ import { OrdersModule } from './application/orders/orders.module';
       isGlobal: true,
       envFilePath: ['.env', '../.env'],
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test')
-          .default('development'),
+        NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),
         PORT: Joi.number().default(4000),
         DATABASE_URL: Joi.string().required(),
         REDIS_URL: Joi.string().required(),
@@ -41,6 +40,7 @@ import { OrdersModule } from './application/orders/orders.module';
     CartModule,
     OrdersModule,
     CheckoutModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
 })

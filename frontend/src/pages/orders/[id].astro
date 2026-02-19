@@ -1,0 +1,115 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import type { Order } from '@/types';
+
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? 'http://localhost:4000';
+const { id } = Astro.params;
+
+const token = Astro.cookies.get('access_token')?.value;
+let order: Order | null = null;
+
+try {
+  const res = await fetch(`${BACKEND_URL}/api/orders/${id}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (res.ok) {
+    const json = await res.json();
+    order = json.data;
+  }
+} catch {
+  // Backend unreachable
+}
+
+if (!order) {
+  return Astro.redirect('/orders');
+}
+
+function statusColor(status: string) {
+  switch (status) {
+    case 'COMPLETED': return 'bg-success-100 text-success-700';
+    case 'PENDING': return 'bg-warning-100 text-warning-700';
+    case 'PROCESSING': return 'bg-primary-100 text-primary-700';
+    case 'CANCELLED': return 'bg-danger-100 text-danger-700';
+    default: return 'bg-default-100 text-default-700';
+  }
+}
+---
+
+<BaseLayout title={`Order #${order.id.slice(0, 8)} - Davivienda Store`}>
+  <div class="space-y-6">
+    <div class="flex items-center gap-2">
+      <a href="/orders" class="text-sm text-default-500 hover:text-foreground transition-colors">
+        &larr; My Orders
+      </a>
+    </div>
+
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold">Order #{order.id.slice(0, 8)}</h1>
+        <p class="text-sm text-default-500">
+          {new Date(order.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
+          })}
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <span class={`rounded-full px-3 py-1 text-xs font-medium ${statusColor(order.status)}`}>
+          {order.status}
+        </span>
+        <span class={`rounded-full px-3 py-1 text-xs font-medium ${statusColor(order.paymentStatus)}`}>
+          Payment: {order.paymentStatus}
+        </span>
+      </div>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+      <div class="lg:col-span-2">
+        <div class="rounded-xl border border-divider bg-content1">
+          <div class="border-b border-divider px-6 py-4">
+            <h2 class="font-semibold">Items</h2>
+          </div>
+          <div class="divide-y divide-divider">
+            {order.items.map((item) => (
+              <div class="flex items-center justify-between px-6 py-4">
+                <div>
+                  <p class="font-medium">{item.productName}</p>
+                  <p class="text-sm text-default-500">
+                    Qty: {item.quantity} &times; ${parseFloat(item.unitPrice).toFixed(2)}
+                  </p>
+                </div>
+                <p class="font-semibold">${parseFloat(item.subtotal).toFixed(2)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="rounded-xl border border-divider bg-content1 p-6">
+          <h2 class="font-semibold mb-4">Summary</h2>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-default-500">Subtotal</span>
+              <span>${parseFloat(order.subtotal).toFixed(2)}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-default-500">Discount</span>
+              <span>-${parseFloat(order.discountAmount).toFixed(2)}</span>
+            </div>
+            <hr class="border-divider" />
+            <div class="flex justify-between text-lg font-bold">
+              <span>Total</span>
+              <span>${parseFloat(order.total).toFixed(2)}</span>
+            </div>
+          </div>
+          {order.paymentReference && (
+            <div class="mt-4 rounded-lg bg-default-50 p-3">
+              <p class="text-xs text-default-400">Payment Reference</p>
+              <p class="font-mono text-xs">{order.paymentReference}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

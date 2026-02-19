@@ -9,9 +9,7 @@ import {
 
 @CommandHandler(UpdateProductCommand)
 export class UpdateProductHandler implements ICommandHandler<UpdateProductCommand> {
-  constructor(
-    @Inject(PRODUCT_REPOSITORY) private readonly repo: IProductRepository,
-  ) {}
+  constructor(@Inject(PRODUCT_REPOSITORY) private readonly repo: IProductRepository) {}
 
   async execute(command: UpdateProductCommand): Promise<ProductRecord> {
     const existing = await this.repo.findById(command.id);

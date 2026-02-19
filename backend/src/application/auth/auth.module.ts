@@ -12,10 +12,7 @@ import { PrismaUserRepository } from '../../infrastructure/database/repositories
 import { USER_REPOSITORY } from '../../domain/repositories/user.repository.interface';
 
 @Module({
-  imports: [
-    PassportModule,
-    JwtModule.register({}),
-  ],
+  imports: [PassportModule, JwtModule.register({})],
   controllers: [AuthController],
   providers: [
     AuthService,

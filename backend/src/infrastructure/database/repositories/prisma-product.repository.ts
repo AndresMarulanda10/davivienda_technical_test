@@ -108,10 +108,16 @@ export class PrismaProductRepository implements IProductRepository {
     });
 
     return {
-      id: p.id, name: p.name, description: p.description,
-      price: p.price.toString(), stock: p.stock, imageUrl: p.imageUrl,
-      isActive: p.isActive, categoryId: p.categoryId,
-      createdAt: p.createdAt, updatedAt: p.updatedAt,
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      price: p.price.toString(),
+      stock: p.stock,
+      imageUrl: p.imageUrl,
+      isActive: p.isActive,
+      categoryId: p.categoryId,
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
       category: p.category ?? undefined,
     };
   }
@@ -124,10 +130,16 @@ export class PrismaProductRepository implements IProductRepository {
     });
 
     return {
-      id: p.id, name: p.name, description: p.description,
-      price: p.price.toString(), stock: p.stock, imageUrl: p.imageUrl,
-      isActive: p.isActive, categoryId: p.categoryId,
-      createdAt: p.createdAt, updatedAt: p.updatedAt,
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      price: p.price.toString(),
+      stock: p.stock,
+      imageUrl: p.imageUrl,
+      isActive: p.isActive,
+      categoryId: p.categoryId,
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
       category: p.category ?? undefined,
     };
   }

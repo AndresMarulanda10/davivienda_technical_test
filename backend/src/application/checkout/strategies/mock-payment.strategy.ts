@@ -4,10 +4,7 @@ import { IPaymentStrategy, PaymentResult } from './payment-strategy.interface';
 
 @Injectable()
 export class MockPaymentStrategy implements IPaymentStrategy {
-  async process(
-    _total: number,
-    _metadata: Record<string, unknown>,
-  ): Promise<PaymentResult> {
+  async process(_total: number, _metadata: Record<string, unknown>): Promise<PaymentResult> {
     // Simulate payment gateway latency
     await new Promise((resolve) => setTimeout(resolve, 300));
 

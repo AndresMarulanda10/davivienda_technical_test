@@ -1,0 +1,25 @@
+---
+import AdminLayout from '@layouts/AdminLayout.astro';
+import ProductForm from '@islands/ProductForm';
+import type { Category } from '@/types';
+
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? 'http://localhost:4000';
+let categories: Category[] = [];
+
+try {
+  const res = await fetch(`${BACKEND_URL}/api/categories`);
+  if (res.ok) {
+    const json = await res.json();
+    categories = json.data;
+  }
+} catch {
+  // Backend unreachable
+}
+---
+
+<AdminLayout title="New Product">
+  <div class="space-y-6">
+    <h1 class="text-2xl font-bold">New Product</h1>
+    <ProductForm client:load categories={categories} />
+  </div>
+</AdminLayout>

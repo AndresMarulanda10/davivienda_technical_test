@@ -1,0 +1,43 @@
+---
+import AdminLayout from '@layouts/AdminLayout.astro';
+import ProductForm from '@islands/ProductForm';
+import type { Product, Category } from '@/types';
+
+const BACKEND_URL = import.meta.env.BACKEND_URL ?? 'http://localhost:4000';
+const token = Astro.cookies.get('access_token')?.value;
+const { id } = Astro.params;
+
+let product: Product | null = null;
+let categories: Category[] = [];
+
+try {
+  const [prodRes, catRes] = await Promise.all([
+    fetch(`${BACKEND_URL}/api/products/${id}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    }),
+    fetch(`${BACKEND_URL}/api/categories`),
+  ]);
+
+  if (prodRes.ok) {
+    const json = await prodRes.json();
+    product = json.data;
+  }
+  if (catRes.ok) {
+    const catJson = await catRes.json();
+    categories = catJson.data;
+  }
+} catch {
+  // Backend unreachable
+}
+
+if (!product) {
+  return Astro.redirect('/admin/products');
+}
+---
+
+<AdminLayout title={`Edit ${product.name}`}>
+  <div class="space-y-6">
+    <h1 class="text-2xl font-bold">Edit Product</h1>
+    <ProductForm client:load product={product} categories={categories} />
+  </div>
+</AdminLayout>

@@ -1,0 +1,37 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Admin - Davivienda Store' } = Astro.props;
+---
+
+<BaseLayout title={title}>
+  <div class="flex gap-6">
+    <aside class="hidden md:block w-56 shrink-0">
+      <nav class="sticky top-20 space-y-1 rounded-xl border border-divider bg-content1 p-4">
+        <h3 class="mb-3 text-sm font-semibold text-default-500 uppercase tracking-wide">
+          Admin Panel
+        </h3>
+        <a
+          href="/admin/products"
+          class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-default-600 hover:bg-default-100 transition-colors"
+        >
+          Products
+        </a>
+        <a
+          href="/admin/orders"
+          class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-default-600 hover:bg-default-100 transition-colors"
+        >
+          Orders
+        </a>
+      </nav>
+    </aside>
+
+    <div class="flex-1 min-w-0">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>

@@ -11,11 +11,7 @@ import { ORDER_REPOSITORY } from '../../domain/repositories/order.repository.int
 import { AuthModule } from '../auth/auth.module';
 import { DatabaseModule } from '../../infrastructure/database/database.module';
 
-const QueryHandlers = [
-  GetUserOrdersHandler,
-  GetOrderByIdHandler,
-  GetAllOrdersHandler,
-];
+const QueryHandlers = [GetUserOrdersHandler, GetOrderByIdHandler, GetAllOrdersHandler];
 
 const CommandHandlers = [UpdateOrderStatusHandler];
 
