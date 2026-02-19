@@ -5,11 +5,13 @@ import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { DatabaseModule } from './infrastructure/database/database.module';
 import { AuthModule } from './application/auth/auth.module';
+import { ProductsModule } from './application/products/products.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env', '../.env'],
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')
@@ -30,6 +32,7 @@ import { AuthModule } from './application/auth/auth.module';
     EventEmitterModule.forRoot(),
     DatabaseModule,
     AuthModule,
+    ProductsModule,
   ],
   controllers: [AppController],
 })

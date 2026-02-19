@@ -1,0 +1,264 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-02-19T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v9",
+  "resources": [
+    {
+      "_id": "wrk_davivienda",
+      "_type": "workspace",
+      "name": "Davivienda API",
+      "description": "E-commerce API — NestJS + Prisma + PostgreSQL",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_davivienda",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:4000/api",
+        "access_token": "",
+        "refresh_token": ""
+      }
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_davivienda",
+      "name": "Auth"
+    },
+    {
+      "_id": "req_register",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Register",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/register",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Pass@12345\"\n}"
+      }
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/login",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@davivienda.com\",\n  \"password\": \"Admin@12345\"\n}"
+      }
+    },
+    {
+      "_id": "req_login_customer",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login (customer)",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/login",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"customer@davivienda.com\",\n  \"password\": \"Customer@12345\"\n}"
+      }
+    },
+    {
+      "_id": "req_refresh",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Refresh Token",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/refresh",
+      "headers": [],
+      "body": { "mimeType": "application/json", "text": "" }
+    },
+    {
+      "_id": "req_logout",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Logout",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/logout",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": { "mimeType": "application/json", "text": "" }
+    },
+    {
+      "_id": "fld_products_public",
+      "_type": "request_group",
+      "parentId": "wrk_davivienda",
+      "name": "Products — Public"
+    },
+    {
+      "_id": "req_get_products",
+      "_type": "request",
+      "parentId": "fld_products_public",
+      "name": "GET /products (list)",
+      "method": "GET",
+      "url": "{{ base_url }}/products",
+      "parameters": [
+        { "name": "page", "value": "1", "disabled": true },
+        { "name": "limit", "value": "20", "disabled": true },
+        { "name": "search", "value": "Clean", "disabled": true },
+        { "name": "categoryId", "value": "<uuid>", "disabled": true },
+        { "name": "isActive", "value": "true", "disabled": true }
+      ],
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_get_products_search",
+      "_type": "request",
+      "parentId": "fld_products_public",
+      "name": "GET /products?search=Clean",
+      "method": "GET",
+      "url": "{{ base_url }}/products",
+      "parameters": [
+        { "name": "search", "value": "Clean" }
+      ],
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_get_product_by_id",
+      "_type": "request",
+      "parentId": "fld_products_public",
+      "name": "GET /products/:id",
+      "method": "GET",
+      "url": "{{ base_url }}/products/REPLACE_WITH_PRODUCT_ID",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_get_product_404",
+      "_type": "request",
+      "parentId": "fld_products_public",
+      "name": "GET /products/:id — 404 (inactive / not found)",
+      "method": "GET",
+      "url": "{{ base_url }}/products/00000000-0000-0000-0000-000000000000",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "fld_products_admin",
+      "_type": "request_group",
+      "parentId": "wrk_davivienda",
+      "name": "Products — Admin"
+    },
+    {
+      "_id": "req_create_product",
+      "_type": "request",
+      "parentId": "fld_products_admin",
+      "name": "POST /products (create)",
+      "method": "POST",
+      "url": "{{ base_url }}/products",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"New Product\",\n  \"description\": \"A detailed product description with at least ten chars.\",\n  \"price\": 49.99,\n  \"stock\": 100,\n  \"imageUrl\": \"https://placehold.co/600x400\",\n  \"categoryId\": \"REPLACE_WITH_CATEGORY_ID\"\n}"
+      }
+    },
+    {
+      "_id": "req_create_product_no_auth",
+      "_type": "request",
+      "parentId": "fld_products_admin",
+      "name": "POST /products — 401 (no token)",
+      "method": "POST",
+      "url": "{{ base_url }}/products",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"New Product\",\n  \"description\": \"A detailed description.\",\n  \"price\": 49.99,\n  \"stock\": 100,\n  \"imageUrl\": \"https://placehold.co/600x400\",\n  \"categoryId\": \"REPLACE_WITH_CATEGORY_ID\"\n}"
+      }
+    },
+    {
+      "_id": "req_create_product_customer",
+      "_type": "request",
+      "parentId": "fld_products_admin",
+      "name": "POST /products — 403 (customer role)",
+      "method": "POST",
+      "url": "{{ base_url }}/products",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"New Product\",\n  \"description\": \"A detailed description.\",\n  \"price\": 49.99,\n  \"stock\": 100,\n  \"imageUrl\": \"https://placehold.co/600x400\",\n  \"categoryId\": \"REPLACE_WITH_CATEGORY_ID\"\n}"
+      }
+    },
+    {
+      "_id": "req_update_product",
+      "_type": "request",
+      "parentId": "fld_products_admin",
+      "name": "PATCH /products/:id (update)",
+      "method": "PATCH",
+      "url": "{{ base_url }}/products/REPLACE_WITH_PRODUCT_ID",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"price\": 39.99,\n  \"stock\": 50\n}"
+      }
+    },
+    {
+      "_id": "req_update_product_404",
+      "_type": "request",
+      "parentId": "fld_products_admin",
+      "name": "PATCH /products/:id — 404 (not found)",
+      "method": "PATCH",
+      "url": "{{ base_url }}/products/00000000-0000-0000-0000-000000000000",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"price\": 39.99\n}"
+      }
+    },
+    {
+      "_id": "req_delete_product",
+      "_type": "request",
+      "parentId": "fld_products_admin",
+      "name": "DELETE /products/:id (soft-delete, 204)",
+      "method": "DELETE",
+      "url": "{{ base_url }}/products/REPLACE_WITH_PRODUCT_ID",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_delete_product_404",
+      "_type": "request",
+      "parentId": "fld_products_admin",
+      "name": "DELETE /products/:id — 404 (already deleted or not found)",
+      "method": "DELETE",
+      "url": "{{ base_url }}/products/00000000-0000-0000-0000-000000000000",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {}
+    }
+  ]
+}
