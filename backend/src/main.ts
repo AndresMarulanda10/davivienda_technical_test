@@ -3,6 +3,7 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { rateLimit } from 'express-rate-limit';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { TransformInterceptor } from './infrastructure/http/interceptors/transform.interceptor';
 import { HttpExceptionFilter } from './infrastructure/http/filters/http-exception.filter';
@@ -12,6 +13,8 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.use(helmet());
+
+  app.use(cookieParser());
 
   app.use(
     rateLimit({

@@ -4,6 +4,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { DatabaseModule } from './infrastructure/database/database.module';
+import { AuthModule } from './application/auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { DatabaseModule } from './infrastructure/database/database.module';
     }),
     EventEmitterModule.forRoot(),
     DatabaseModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })
