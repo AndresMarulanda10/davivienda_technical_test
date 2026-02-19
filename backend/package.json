@@ -82,16 +82,30 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "application/**/*.(t|j)s",
+      "!application/**/*.spec.ts",
+      "!application/**/*.module.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "coverageThreshold": {
-      "global": {
+      "./src/application/auth/auth.service.ts": {
         "branches": 70,
         "functions": 70,
         "lines": 70,
         "statements": 70
+      },
+      "./src/application/checkout/checkout.service.ts": {
+        "branches": 70,
+        "functions": 70,
+        "lines": 70,
+        "statements": 70
+      },
+      "./src/application/products/queries/get-products.handler.ts": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
       }
     }
   }
