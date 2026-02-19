@@ -331,6 +331,122 @@
       "url": "{{ base_url }}/cart",
       "headers": [],
       "body": {}
+    },
+    {
+      "_id": "fld_checkout",
+      "_type": "request_group",
+      "parentId": "wrk_davivienda",
+      "name": "Checkout"
+    },
+    {
+      "_id": "req_checkout",
+      "_type": "request",
+      "parentId": "fld_checkout",
+      "name": "POST /checkout (process order)",
+      "method": "POST",
+      "url": "{{ base_url }}/checkout",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_checkout_empty",
+      "_type": "request",
+      "parentId": "fld_checkout",
+      "name": "POST /checkout — 400 (empty cart)",
+      "method": "POST",
+      "url": "{{ base_url }}/checkout",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_checkout_no_auth",
+      "_type": "request",
+      "parentId": "fld_checkout",
+      "name": "POST /checkout — 401 (no token)",
+      "method": "POST",
+      "url": "{{ base_url }}/checkout",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "fld_orders",
+      "_type": "request_group",
+      "parentId": "wrk_davivienda",
+      "name": "Orders -- Customer"
+    },
+    {
+      "_id": "req_user_orders",
+      "_type": "request",
+      "parentId": "fld_orders",
+      "name": "GET /orders (user history)",
+      "method": "GET",
+      "url": "{{ base_url }}/orders",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_order_detail",
+      "_type": "request",
+      "parentId": "fld_orders",
+      "name": "GET /orders/:id (order detail)",
+      "method": "GET",
+      "url": "{{ base_url }}/orders/REPLACE_WITH_ORDER_ID",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "fld_orders_admin",
+      "_type": "request_group",
+      "parentId": "wrk_davivienda",
+      "name": "Orders -- Admin"
+    },
+    {
+      "_id": "req_admin_orders",
+      "_type": "request",
+      "parentId": "fld_orders_admin",
+      "name": "GET /admin/orders (all orders)",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/orders",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_admin_update_status",
+      "_type": "request",
+      "parentId": "fld_orders_admin",
+      "name": "PATCH /admin/orders/:id/status",
+      "method": "PATCH",
+      "url": "{{ base_url }}/admin/orders/REPLACE_WITH_ORDER_ID/status",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ admin_token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"PROCESSING\"\n}"
+      }
+    },
+    {
+      "_id": "req_admin_orders_forbidden",
+      "_type": "request",
+      "parentId": "fld_orders_admin",
+      "name": "GET /admin/orders — 403 (customer token)",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/orders",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ access_token }}" }
+      ],
+      "body": {}
     }
   ]
 }

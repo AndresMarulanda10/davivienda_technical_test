@@ -8,6 +8,8 @@ import { CacheModule } from './infrastructure/cache/cache.module';
 import { AuthModule } from './application/auth/auth.module';
 import { ProductsModule } from './application/products/products.module';
 import { CartModule } from './application/cart/cart.module';
+import { CheckoutModule } from './application/checkout/checkout.module';
+import { OrdersModule } from './application/orders/orders.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { CartModule } from './application/cart/cart.module';
     AuthModule,
     ProductsModule,
     CartModule,
+    OrdersModule,
+    CheckoutModule,
   ],
   controllers: [AppController],
 })
