@@ -8,7 +8,12 @@ import {
   Link,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { $currentUser, $isAdmin, clearAuth } from '@stores/auth.store';
+import {
+  $accessToken,
+  $currentUser,
+  $isAdmin,
+  clearAuth,
+} from '@stores/auth.store';
 import { clearCart } from '@stores/cart.store';
 import CartCounter from './CartCounter';
 import Providers from '@components/Providers';
@@ -19,9 +24,14 @@ export default function NavbarIsland() {
 
   async function handleLogout() {
     try {
+      const token = $accessToken.get();
       await fetch(
         `${import.meta.env.PUBLIC_BACKEND_URL ?? 'http://localhost:4000'}/api/auth/logout`,
-        { method: 'POST', credentials: 'include' },
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        },
       );
     } catch {
       // Logout best-effort

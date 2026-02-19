@@ -5,6 +5,8 @@ const BACKEND_URL =
     ? (import.meta.env.PUBLIC_BACKEND_URL ?? 'http://localhost:4000')
     : (import.meta.env.BACKEND_URL ?? 'http://localhost:4000');
 
+const ACCESS_TOKEN_MAX_AGE = 900; // 15 minutes in seconds
+
 interface ApiFetchOptions extends RequestInit {
   auth?: boolean;
 }
@@ -111,9 +113,24 @@ async function tryRefreshToken(): Promise<boolean> {
     const result = (await response.json()) as ApiResponse<{
       accessToken: string;
     }>;
-    $accessToken.set(result.data.accessToken);
+    const token = result.data.accessToken;
+    $accessToken.set(token);
+    syncAccessTokenCookie(token);
     return true;
   } catch {
     return false;
   }
+}
+
+export function syncAccessTokenCookie(token: string | null): void {
+  if (typeof document === 'undefined') return;
+  if (token) {
+    document.cookie = `access_token=${token}; path=/; max-age=${ACCESS_TOKEN_MAX_AGE}; samesite=strict`;
+  } else {
+    document.cookie = 'access_token=; path=/; max-age=0; samesite=strict';
+  }
+}
+
+export function clearAccessTokenCookie(): void {
+  syncAccessTokenCookie(null);
 }
